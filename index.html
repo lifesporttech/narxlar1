@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="uz"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life Drujba — Sport pitaniye narxlari</title>
+<style>
+:root{--bg:#f4f5f8;--c:#fff;--t:#15171c;--m:#6b7280;--a:#ff4d2e;--a2:#ff8a00;--b:#e6e8ee;--sh:0 2px 10px rgba(20,25,40,.07);box-sizing:border-box}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0f13;--c:#181a20;--t:#f1f2f5;--m:#9aa0ad;--b:#272a33;--sh:none}}
+:root[data-theme="dark"]{--bg:#0e0f13;--c:#181a20;--t:#f1f2f5;--m:#9aa0ad;--b:#272a33;--sh:none}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--t);font:15px/1.4 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding-bottom:calc(24px + env(safe-area-inset-bottom,0px))}
+.hero{background:linear-gradient(135deg,#1b1d24,#2b1a16 60%,#ff4d2e);color:#fff;padding:calc(22px + env(safe-area-inset-top,0px)) 16px 26px}
+.w{max-width:1000px;margin:auto}
+.hero h1{margin:0;font-size:26px;letter-spacing:.3px}.hero p{margin:4px 0 14px;opacity:.8}
+.cta{display:flex;gap:8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:11px 18px;border-radius:12px;font-weight:700;text-decoration:none;font-size:15px;border:0;cursor:pointer}
+.btn.tg{background:linear-gradient(135deg,var(--a),var(--a2));color:#fff}
+.btn.ph{background:rgba(255,255,255,.15);color:#fff;border:1px solid rgba(255,255,255,.3)}
+.tools{position:sticky;top:0;z-index:5;background:var(--bg);padding:12px 16px 8px;margin-top:-14px}
+.tools .box{background:var(--c);border-radius:16px;padding:10px;box-shadow:var(--sh);border:1px solid var(--b)}
+input,select{width:100%;padding:12px 14px;font-size:16px;border:1px solid var(--b);border-radius:12px;background:var(--bg);color:var(--t)}
+.r{display:flex;gap:8px;margin-top:8px}
+.chips{display:flex;gap:6px;overflow-x:auto;margin-top:8px;padding-bottom:2px;scrollbar-width:none}
+.chip{white-space:nowrap;padding:7px 14px;border:1px solid var(--b);border-radius:20px;background:var(--bg);color:var(--t);cursor:pointer;font-size:13px;font-weight:600}
+.chip.on{background:var(--a);color:#fff;border-color:var(--a)}
+.cnt{color:var(--m);font-size:13px;margin:10px 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;padding:0 16px}
+.card{background:var(--c);border:1px solid var(--b);border-radius:16px;padding:14px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:8px}
+.tag{display:flex;gap:6px;flex-wrap:wrap}
+.tag span{font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px;background:rgba(255,77,46,.12);color:var(--a)}
+.tag span+span{background:var(--bg);color:var(--m)}
+.n{font-weight:600;flex:1}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.p{font-size:20px;font-weight:800}
+.p small{font-size:12px;font-weight:600;color:var(--m)}
+.ord{padding:9px 16px;font-size:14px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;border-radius:11px;text-decoration:none;font-weight:700}
+.bar{position:fixed;left:0;right:0;bottom:0;background:var(--c);border-top:1px solid var(--b);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;z-index:9}
+.bar .btn{flex:1}.bar .ph{background:var(--bg);color:var(--t);border:1px solid var(--b)}
+</style></head><body>
+<div class="hero"><div class="w">
+<h1>💪 Life Drujba</h1><p>Mahsulotlar nomi va narxlari: 01.10.2026 yil</p>
+<div class="cta"><a class="btn tg" href="https://t.me/lifedrujba" target="_blank" rel="noopener">✈️ Заказать</a><a class="btn ph" id="ph1" href="#"></a></div>
+</div></div>
+<div class="tools"><div class="w box">
+<input id="q" type="search" placeholder="🔍 Mahsulot nomini yozing (creatine, olimp, whey...)">
+<div class="r"><select id="br"></select><select id="so"><option value="asc">Arzondan qimmatga</option><option value="desc">Qimmatdan arzonga</option><option value="az">Nomi: A-Z</option></select></div>
+<div class="chips" id="cats"></div>
+</div></div>
+<div class="w"><div class="cnt" id="cnt"></div><div class="grid" id="list"></div></div>
+<script>
+const PHONE="+998 55 516 99 16";
+const RAW=`OLIMP CREATINE MONO 200G|150
+KL GOLD CREATINE 300G 60 SERV|120
+Olimp Argipower 1500 120caps|250
+FUELUP OMEGA-3 1000MG 180SOFT|250
+FUELUP OMEGA-3 1000MG 90SOFT|150
+Olimp Rocky Athletes Creatine 200gr Citrus Lemonade|99
+OLIMP AAKG 1250 120caps|250
+OSVIT CREAT 300G|100
+MYPROTEIN 250G CREATINE|150
+ALLMAX CREATIN 400g|300
+Olimp Rocky Athletes Creatine 200gr Sour Apple|150
+APN CREATINE MONO 250G|180
+GAT L ARGININE 180TASB 1000MG|250
+OLIMP Rocky Athletes Creatin 500gr|300
+AMINO HARDCORE 325TABS BANAN|290
+OLIMP CITRULLINE MALATE LEMONADE 200G|250
+OS Pure creatine 200gr|120
+Reckful Creatine 200 g без вкус|120
+MYPROTEIN 500G CREATINE|290
+ALLMAX L ARGININE 400G|350
+Olimp AAKG Xplode 300gr Orange|350
+OLIMP Beta-Alanine Carno Rush 80tabs|150
+OLIMP Carbonox 1kg Pineapple|230
+RULE1 WHEY 2.3KG CHOCOLATE|850
+Olimp Gain Bolic 6000 1kg Chocolate|200
+Olimp BCAA 20:1:1 Xplode 200gr Pear|180
+OSTROVIT AAKG 200gr Lemon|150
+OLIMP ASHWAGANDHA KSM-66 60CAPS|170
+Basic Creatine 300gr|180
+Reckful Whey Pro Polydextrose 450gr Chocolate|290
+ETHICSPORT Creatine 500gr|150
+FA Skull Labs Creatine 300gr|120
+KL GOLD WHEY 908gr Chocolate|390
+OSTROVIT CREATINE MONOHYDRATE 300G Apple|100
+OSTROVIT CREATINE MONOHYDRATE 300G Cherry|100
+Olimp Iso Plus 700gr Lemon|250
+GEAR Pre Pump SHock 350gr Mango Lemon|210
+Ostrovit ARGININE 210G Orange|150
+OSTROVIT KSM 66 Ashwagandha 120caps|160
+QUAMTRAX CREATINE 300G 100SERV|160
+SHAKER|30
+Reckful L Carnitine 3000 500ml Watermelon|200
+OLIMP Amino EAA Xplode 280gr Orange|180
+Ostrovit Glucosamine MSM Chondroitin 90tabs|150
+Reckful Chlorophyll 500ml|150
+ICE PUMP CITRUS POWDER|270
+Olimp Anabolic Amino 9000 150tabs|250
+Ostrovit ARGININE 210G|150
+OstroVit Ashwagandha 90tabs|90
+YAVA CREAM OF RICE CHOCO 1KG|250
+YAVA BULK MASS 1,5kg choco coconut|300
+OSTROVIT CREATINE MONOHYDRATE 300G Lemon|100
+Reckful Creatine 150caps|90
+Reckful L Glutamin 240gr|150
+YAVA PREM PUMP RASPBERRY COCONUT 26SER|300
+OLIMP Carbonox 1kg Watermelon|230
+Reckful BCAA Electrolytes 2:1:1 260gr Blue Raspberry|150
+ETHICSPORT Citrulline 210gr Lemon|150
+OSTROVIT AAKG 200gr|170
+OSTROVIT Carb 1kg Watermelon|200
+Ostrovit OMEGA 3 30caps|50
+BIG MAN CREATINE 500G|300
+Reckful Whey Pro Polydextrose 450gr Cinnabon|290
+Reckful Whey Pro Polydextrose 450gr Salt Caramel|290
+YAVA PREM PUMP TOFFE APPLE 26SER|300
+OLIMP BCAA Xplode 280gr Ice Tea Peach|230
+OS Pure creatine 300gr|180
+Reckful The Pump 240gr Strawberry Lemonade|200
+Olimp Whey Protein Complex 1.8kg double Chocolate|790
+SYNTHA-6 2.27KG(CHOCO)|850
+allmax citrulline malate 300g|350
+C4 PRE WORK 50S Watermelon|390
+ON CREATINE 300G|300
+Olimp Cream of Rice 1kg Vanilla|220
+CELLUCOR CREATINE 300G|160
+MR CREATINE MICRO 60S|150
+Muscle tech cell tech|350
+OLIMP Profi MASS 2,5kg Chocolate|790
+Reckful Citrulline 240gr|170
+YAVA Fish Collagen 220gr Pineapple|250
+YAVA LABS BCAA GLUTAMINE FRUIT PUNCH 300G|250
+Olimp Cream of Rice 1kg Chocolate|220
+Reckful L Carnitine 3000 500ml Apple|200
+Yava Protein Cookie Dough 1kg Banan|400
+DY SHADOWHEY CHOCO 2KG|800
+Olimp Beta Alanine Xplode powder 250gr Orange|250
+OSTROVIT CREATINE MONOHYDRATE 1kg|290
+Reckful Monster Pak 30pacs|350
+Reckful Whey Beef 900gr Blueberry|390
+YAVA PREM CHOCO COOKIES 2KG|850
+YAVA PREM WHEY CHOCO CHERRY 2KG|850
+QUAMTRAX l carnitine 3000 Cola|310
+Reckful Whey Pro Polydextrose 450gr Pistacho|290
+OLIMP ISO Plus 1,5kg Cola|400
+OLIMP ISO Plus 1,5kg Orange|400
+OLIMP ISO Plus 1,5kg Tropic Blue|400
+Olimp Iso Plus 700gr Ice Tea|250
+Olimp Iso Plus 700gr Tropic Blue|250
+Olimp Iso Plus Powder 700gr Cola|250
+MT CELL TECH 1.36KG TROPIC|390
+YAVA CREAM OF RICE CHOCO CHERRY 1KG|250
+DY CHANGER MASS 3kg chocolate|590
+Olimp Iso Plus 700gr Orange|250
+OstroVit ARGININE 500G MULTIFRUIT|300
+OSTROVIT Pump Extreme 300gr Grapefruit|180
+RC Creatin 1kg|400
+YAVA LABS BCAA STRAWBERRY MANGO1300G|250
+Olimp Chela Min 60caps|150
+OLIMP VITA MIN 40+ 60CAPS|180
+OLIMP Whey Protein Complex 700gr Chocolate|350
+Ostrovit MASS Bulk 700gr Salted Caramel|190
+Reckful AAKG 240gr|190
+Reckful The Pump 240gr Bluberry Apple|200
+YAVA PREM PUMP COTTON CANDY 26SER|300
+FA ICE PUMP DRAGON FRUIT 50S|270
+HIGH BCAA GREEN APPLE 70 SERV|300
+JNX THE CURSE SWEET MELON 50SERV|260
+OLIMP Carbonox 3.5 kg Orange|600
+OS Beauty Collagen 200gr Orange|150
+YAVA PREM WHEY WHITE CHOCO RASPB 2KG|850
+Nutriversum L Arginine 200gr|150
+YAVA PREMIUM BEEF PROTEIN 2KG Guanabana|850
+YAVA PREMIUM BEEF PROTEIN 2KG Strawberry|850
+Basic PRE 240gr Club Mix|180
+MUSCLETECH CREATINE CHEWS 90tabs Citrus Burst|320
+RAW CBUM ISOLATE 2,3kg Vanilla Oatmeal Cookie|1400
+YAVA LABS BULK MASS CHOCO ICE 1.5KG|300
+YAVA PREMIUM BEEF PROTEIN 2KG Cherry|850
+OS Whey 900gr Strawberry|460
+OLIMP BCAA 20:1:1 Xplode 200gr Grapefruit|180
+OLIMP BCAA Xplode 280gr Fruit punch|230
+BSN AMINO X 30S FRUIT|290
+ICE CREATINE DRAGON FRUIT 300G|150
+OLIMP Ashwagandha 600 sport 60caps|170
+OLIMP BCAA 1100 120caps|150
+OLIMP BCAA Xplode 280gr Lemon|230
+OSTROVIT BCAA 200gr Lemon|150
+OSTROVIT Marine Collagen 140gr Creamy Wafers|150
+OSTROVIT Marine Collagen 200gr|190
+RC CREATINE 300 GR 120 SER|150
+YAVA LABS COLLAGEN FOREST FRUITS 400G|350
+YAVA PRE 300gr grape lemon|250
+OLIMP Whey Protein Complex 700gr Cookies Cream|350
+OS Whey 900gr Double Chocolate|460
+Reckful Real Food Protein Isolate Mix 900gr Chocolate|400
+Reckful Ежовик 90caps|150
+BSN AMINO X WATERMELON 435G|290
+YAVA ISO 2KG CHOCO TOFFEE CARAMEL|950
+Reckful Cream Of Rice 900gr Choco Almand|210
+Reckful Cream Of Rice 900gr Chocolate|210
+ALLMAX Mass Gainer 2.27kg Chocolate|550
+KL SHAABOOM PUMP ORANGE 44SER|240
+MUTANT MASS 2.3KG Strawberry Banan|390
+OLIMP Carbonox 3.5 kg Lemon|600
+OLIMP ISO Plus 1,5kg Lemon|400
+Olimp L Carnitine Xplode 300gr Orange|420
+OLIMP Whey Protein Complex 700gr Ice Coffe|350
+OSTROVIT Whey 2kg Chocolate|800
+Reckful Creatine HCL 90caps|150
+Syntha 6 Whey 1.3kg Chocolate|550
+XTEND BCAA STRAW KIWI 30 SERV|220
+YAVA LABS BULK MASS BANANA 1.5KG|300
+YAVA PREM WHEY CHOCO BANAN 2KG|850
+DY WHEY COMPLEX TEMPRO 2.27KG Juicy Peach|800
+NAPALM WHEY PRO 2KG CHOCOLATE|620
+YAVA PREM ISO WHITE CHOCO RASPBER 2KG|1000
+YAVA PREM WHITE CHOCO COCONUT 2KG|850
+OLIMP T-100 HARDCORE 120CAPS|350
+YAVA PREM BEEF PROTEIN COLA LIME 2KG|850
+aps mesomorph 388g strawberry kiwi|420
+APS MESOMORPH 388G WATERMELON|420
+APS MESOMORX 388G PINEAPPLE|420
+FUELUP L-ARGININE 1000MG 120TAB|250
+Fuel up L-Arginine 500mg 120caps|150
+KL SHAABOOM 385gr FRUIT PUNCH|240
+KL SHAABOOM MANGO LEMON 44SER|240
+KL SHAABOOM PUMP CITRUS PEACH 44SER|240
+KL SHAABOOM PUMP DRAGON FRUIT 385G|240
+KL SHAABOOM PUMP EXOTIC 385G|240
+Muscletech PLATINUM CREATINE 100 %|350
+OLIMP Whey Protein Xplode 2.25kg Strawberry|690
+OLIMP Whey Protein Xplode 2.25kg Vanilla|690
+ON AMINO ENERGY 30 SER Tangerine Wave|290
+OstroVit GLUTAMIN 300g|180
+OSTROVIT Pump Extreme 300gr Strawberry|180
+Reckful AMYLOPECTIN 1.2kg|200
+Reckful Whey Beef 900gr Chocolate|390
+Reckful Whey Beef 900gr Salted Caramel|390
+UNIVERSAL ANIMAL PAK 30PACKS|520
+XTEND EAA BLOOD ORANGE 40S|250
+XTEND EAA LEMON LIME 40S|250
+YAVA COMPLEX MASS 6KG Banan|950
+YAVA COMPLEX MASS 6KG CHOCOLATE|950
+YAVA LABS COLLAGEN 400G Grapefruit|350
+YAVA LABS HIGH BCAA MANGO 420G|300
+YAVA WHEY CHOCO ICE 2KG|750
+DY SHADOWHEY 2KG Lemon Chese Cake|800
+YAVA PREM BEEF PROTEIN PINEAPPLE 2KG|850
+BIG MAN BCAA+GLUTAMINE MELON 300G|250
+Dymatize Elite Whey 900gr Cookies Cream|560
+OSTROVIT BCAA 200gr Orange|150
+Yava Protein Cookie Dough 1kg Chocolate Coconut|400
+Reckful AAKG 120caps|100
+Reckful L Glutamin 120caps|150
+YAVA CREAM OF RICE VANILLA 1KG|250
+OSTROVIT Cream Of Rice 1kg Biscuit Salted Caramel|200
+APS MESOMORPH 388G LIMON|420
+OLIMP BCAA Xplode 500gr Orange|280
+DY HIT BCAA 10:1:1 400gr peach|300
+DY SHADOWHEY 2KG Banana|800
+OLIMP Knockout 2.0 305gr Cola blast|280
+XTEND BCAA 30 SERV LIMONE LIME|220
+YAVA ISO WHEY 2KG Malted Dream Cappucino|950
+YAVA ISO WHEY 2KG Tropical Silk|950
+Yava Protein Cookie Dough 1kg Apple Toffe|400
+Reckful Whey Pro Polydextrose 450gr Coco Almand|290
+OLIMP BCAA Xplode 500gr Ice Tea peach|280
+OLIMP CLA 60caps|180
+Olimp ForTest 120caps|250
+OLIMP Whey Protein Complex 700gr Dubai Chocolate|350
+OLIMP Whey Protein Complex 700gr Salted Caramel|350
+OLIMP Whey Protein Complex 700gr Tiramisu|350
+Reckful AMYLOPECTIN 1.2kg Melon|200
+Reckful BCAA Electrolytes 2:1:1 260gr Mojito|150
+Reckful Creatine 200 Forest Berries|100
+Reckful Tri Creatine 300gr|220
+YAVA ELITE WHEY CHOCO COCOUNT 2KG|750
+YAVA WHEY 2KG COHCO CARAMEL|750
+OLIMP Whey Protein Xplode 2.25kg Chocolate|690
+Yava Protein Cookie Dough 1kg Cookies Mango|400
+Yava Protein Cookie Dough 1kg Peanut Butter Caramel|400
+Amino energy ( Pineapple twist )|290
+APS MESOMORPH 30S GREEN APPLE|420
+APS MESOMORPH 388G TUTTI FRUTTI|420
+OLIMP BCAA 4:1:1 Xplode 200gr Pear|200
+BODY ARMOR GROWTH HORMONE BOOSTER|690
+JNX THE CURSE APPLE 50SERV|260
+KL Anabolic Ice EAA 210gr Dragon Fruit|140
+KL Anabolic Ice EAA 210gr Mango Passion Fruit|140
+Muscletech PLATINUM CREATINE 450gr|380
+Olimp Rocky Athletes Creatine 250gr Bubble Gum|190
+Ostrovit BCAA Glutamine 500gr Orange|280
+PSYCHOTIC PRE WORK COTTON CANDY 35S|280
+PSYCHOTIC RED 35S FRUIT PUNCH|280
+Reckful Monster Pak 300gr Cherry|290
+Reckful Monster Pak 300gr Fruit Punch|290
+Reckful Monster Pak 300gr Orange|290
+USPlabs BCAA Supreme 545g fruit|320
+USP LAS JACK3D WATERMELON 250G|380
+YAVA CREATINE LEMON MOJITO 300G|250
+YAVA LABS MULTI VITAMIN 60CAPS|220
+MYPROTEIN AAKG 250GR|190
+BIG MAN ULTIMATE WHEY CHOCO 2KG|890
+BIG MAN ULTIMATE WHEY DUBAI CHOCO 2KG|890
+DY Micellar Casein 900gr|450
+KL Gold ISO 2kg Chocolate|900
+MY ORIGIN PRE WORK SOUR APPLE 288G|250
+OLIMP Whey Protein Xplode 350gr Dubai Chocolate|180
+OLIMP BCAA Xplode 500gr Strawberry|280
+Dymatize Elite Whey 900gr gourmet vanilla|560
+OLIMP BCAA 20.1.1. 500G ANANAS|350
+Olimp Gold BEEF Pro Amino 300tabs|650
+Olimp Gold Omega 3 120caps|250
+ON AMINO ENERGY 270gr Citrus Spritz|290
+ON AMINO ENERGY 30 SER WATERMELON|290
+ON AMINO ENERGY ESSENTIAL GRAPE 270G/30SV.|290
+Reckful AMYLOPECTIN 1.2kg Berry Mix|240
+Reckful AMYLOPECTIN 1.2kg Orange|200
+Reckful BCAA Electrolytes 2:1:1 260gr Ice Melon|160
+KL GOLD WHEY 2 KG Chocolate|670
+NUCLEAR ATOMIC WHEY 2KG CHOCOLATE|650
+YAVA PREM ISO CHOCO BANAN 2KG|1000
+OLIMP BCAA Xplode 280gr Orange|230
+OLIMP BCAA Xplode 280gr Xplosive Cola|350
+BIG MAN FORZA PROTEIN CHOCO BLANCO 2,1KG|700
+BIG MAN ZERO ISO WHEY CHOCO 900G|690
+CARNIVORE CHOCOLATE 2KG|870
+DY HIT BCAA 10:1:1 400gr pieapple|300
+JNX The curse preworout Friut punch 50|260
+KL Anabolic Ice EAA 210gr Blackberry Pineapple|140
+KL Anabolic Ice EAA 210gr Orange Mango|140
+KL LEVRO MONO 300G 60SERV|170
+MESAMORPH SNOW CONE|420
+ON Amino 2222 160 tab|300
+ON WHEY GOLD 2LB Caramel Macchiato|650
+ON WHEY GOLD 2LB Fruity Cereal|650
+ON WHEY GOLD STANDART 1 KG EXTRA MILK|650
+OS Pure BCAA 2:1:1 200gr Orange|150
+OS Pure BCAA 2:1:1 200gr Pineapple|150
+Reckful Monster Flex 30pacs|330
+Reckful Whey Pro Polydextrose 900gr Snikers|490
+Rule 1 BCAA pineapple 30ser|150
+USP LABS JACK3D PINEAPPLE 45 SER|380
+YAVA Creatine 300gr Ice Candy|250
+USP LABS JACK3D FRUIT PUNCH|380
+YAVA LABS AAKG 1000 200CAPS|280
+ON whey gold 4.5kg rich choco|2150
+BIG MAN ISO HYDRO CHOCO HAZELNUT 1KG|490
+OLIMP Whey Protein Complex 700gr Banan|350
+OLIMP Whey Protein Complex 700gr Strawberry|350
+OLIMP Whey Protein Xplode 700gr Dubai Chocolate|290
+YAVA MUTI PAK 30serv|400
+ANABOLIC PRIME PRO 2KG CHOCOLATE|670
+applied nutrition WHEY 2kg choco bueno|825
+BIG MAN MULTI PHASE WHEY CHOCO 2KG|950
+YAVA PREM ISO CHOCO COOKIES 2KG|1000
+YAVA PREM ISO WHITE CHOCO COCONUT 2KG|1000
+ON WHEY GOLD 2LB BOUBLE CHOCO|650
+ON WHEY GOLD STANDARD 900gr Smores|650
+Reckful Whey Pro Polydextrose 900gr Cinnabon|490`;
+
+const BR=[["Olimp",/olimp|amino hardcore/i],["Ostrovit",/ostrovit|\bos\b|osvit/i],["Reckful",/reckful/i],["Yava",/yava/i],["KL (Kevin Levrone)",/^kl\b|\bkl\b/i],["Big Man",/big man/i],["Fuel Up",/fuel ?up/i],["MyProtein",/myprotein/i],["Allmax",/allmax/i],["Optimum Nutrition (ON)",/^on\b|amino energy/i],["MuscleTech",/muscle ?tech|^mt\b/i],["Dymatize / DY",/^dy\b|dymatize/i],["APS",/\baps\b|mesam|mesomor/i],["USPlabs",/usp/i],["BSN",/bsn|syntha/i],["XTEND",/xtend/i],["Rule 1",/rule ?1/i],["JNX",/jnx/i],["Ice / FA",/\bice\b|^fa\b/i],["Boshqa",/./]];
+const CT=[["Aksessuar",/shaker/i],["Kreatin",/creat/i],["Vitamin / Omega / Kollagen",/omega|collagen|vita|ashwa|ksm|gluc.*msm|chlorophyll|cla\b|fortest|chela|ежовик|growth hormone|t-100|multi|muti|monster|animal pak/i],["Mass gainer / Uglevod",/mass|gain|carbonox|carb\b|amylopectin|cream of rice/i],["Pre-workout",/pump|pre\b|pre work|c4|jack3d|mesomor|mesam|curse|psychotic|knockout|shaaboom|cell tech|snow cone/i],["Aminokislota",/bcaa|eaa|amino|aakg|glutamin|arginin|argipower|citrulline|carnitine|beta.?alanine|xtend|hit bcaa/i],["Protein",/whey|iso|casein|beef|protein|isolate|syntha|cbum|carnivore|napalm/i]];
+const items=RAW.split("\n").map(l=>{const [n,p]=l.split("|");const name=n.trim();
+ const brand=BR.find(b=>b[1].test(name))[0];
+ const cat=(CT.find(c=>c[1].test(name))||["Boshqa"])[0];
+ return{name,price:+p*1000,brand,cat}});
+const $=id=>document.getElementById(id);
+["ph1"].forEach(i=>{$(i).href="tel:"+PHONE.replace(/\s/g,"");$(i).textContent="📞 "+PHONE});
+let cat="Hammasi";
+const fmt=n=>n.toLocaleString("ru-RU").replace(/\u00a0/g," ");
+const cats=["Hammasi",...[...new Set(items.map(i=>i.cat))].sort()];
+const brands=["Barcha brendlar",...[...new Set(items.map(i=>i.brand))].sort((a,b)=>a=="Boshqa"?1:b=="Boshqa"?-1:a.localeCompare(b))];
+$("br").innerHTML=brands.map(b=>`<option>${b}</option>`).join("");
+function chips(){$("cats").innerHTML=cats.map(c=>`<button class="chip ${c==cat?"on":""}" data-c="${c}">${c}</button>`).join("")}
+$("cats").onclick=e=>{if(e.target.dataset.c){cat=e.target.dataset.c;chips();render()}};
+function render(){
+ const q=$("q").value.toLowerCase().trim().split(/\s+/).filter(Boolean),b=$("br").value,so=$("so").value;
+ const r=items.filter(i=>(cat=="Hammasi"||i.cat==cat)&&(b=="Barcha brendlar"||i.brand==b)&&q.every(w=>i.name.toLowerCase().includes(w)));
+ r.sort((a,b)=>so=="asc"?a.price-b.price||a.name.localeCompare(b.name):so=="desc"?b.price-a.price||a.name.localeCompare(b.name):a.name.localeCompare(b.name));
+ $("cnt").textContent=r.length+" ta mahsulot";
+ $("list").innerHTML=r.map(i=>`<div class="card"><div class="tag"><span>${i.brand}</span><span>${i.cat}</span></div><div class="n">${i.name}</div><div class="row"><div class="p">${fmt(i.price)} <small>so'm</small></div></div></div>`).join("")||'<div class="cnt">Hech narsa topilmadi</div>';
+}
+$("q").oninput=render;$("br").onchange=render;$("so").onchange=render;chips();render();
+</script></body></html>

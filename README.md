@@ -1,2 +1,3 @@
-# narxlar1
-Narxlar va mahsulotlar
+# Narxlar
+
+Sport pitaniye narxlari sahifasi.
